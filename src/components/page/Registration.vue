@@ -6,6 +6,7 @@
                 user:{
                     login: '',
                     password: '',
+                    avatar: 'src\image\imgUs\stub.png',
                     idrole: 1,
                     idstatus: 1
                 },
@@ -20,18 +21,23 @@
                         alert("Пожалуйста, заполните все поля.");
                         return;
                     }
-                    const response = await axios.post("http://localhost:5235/Registration", {   
-                        user: this.user
-                    })
+                    const userData = {
+                        Username: this.user.login,
+                        Password: this.user.password,
+                        Avatar: this.user.avatar,
+                        IdRole: this.user.idrole,
+                        IdStatus: this.user.idstatus
+                    }   
+                    const response = await axios.post("http://localhost:5235/Registration", userData)
                     if(response.status === 200){
                         alert("Добро пожаловать в [Систему] {" , this.user.login, "}!")
                         // sessionStorage.setItem('username')
                         this.signIn();
                     }
                 }
-                catch {
-                    console.error("Ошибка при регистрации:", error);
-                alert("Произошла ошибка. Проверьте данные или попробуйте позже.");
+                catch (error) {
+                    console.error("Ошибка при регистрации:", error)
+                    alert("Произошла ошибка. Проверьте данные или попробуйте позже.")
                 }
             },
             togglePasswordVisibility(){
@@ -54,8 +60,8 @@
 
                 const response = await axios.get('http://localhost:5235/Authorization', {
                     params: {
-                    login: this.user.login,
-                    password: this.user.password
+                        login: this.user.login,
+                        password: this.user.password
                     }
                 })
                 if (response.data) {

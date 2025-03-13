@@ -4,11 +4,28 @@ import axios from "axios";
 export default {
   data() {
     return {
+      usermas: {},
       groupedComments: {}, // Группированные комментарии
       loading: true, // Флаг загрузки
     };
   },
   methods: {
+    // Проверка входа
+    truepost(){
+      const storedUser = sessionStorage.getItem('username')
+      if(storedUser){
+        const parseUser = JSON.parse(storedUser)
+        this.usermas = parseUser
+        if(this.usermas.idRole == 1){
+          alert("Доступ запрещён!")
+          this.$router.push('/')
+        }
+      }
+      else {
+        alert("Войтите в систему!")
+        this.$router.push('/')
+      }
+    },
     // Загрузка комментариев
     async fetchComments() {
       try {
@@ -65,6 +82,7 @@ export default {
     },
   },
   mounted() {
+    this.truepost(),
     this.fetchComments(); // Загружаем комментарии при монтировании компонента
   },
 };

@@ -50,7 +50,7 @@ export default {
           <ul v-show="!mobile" className="navigation">
             <li><router-link className="links" to="/game">Игры</router-link></li>
             <li><router-link className="links" to="/move">Фильмы</router-link></li>
-            <li v-if="usermas && usermas.idrole == 2"><router-link className="links" to="/move">Фильмы</router-link></li>
+            <li v-if="usermas && usermas.idRole == 2"><router-link className="links" to="/move">Комментарии</router-link></li>
           </ul>
       </div>
 
@@ -250,6 +250,7 @@ nav {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  background: white;
 }
 
 .px_div h3 {

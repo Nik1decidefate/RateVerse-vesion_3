@@ -9,7 +9,10 @@ export default {
         contentItem: '',
         userId: [],
         comments: [],
-        newComment: [],
+        newComment: {
+          rating: 0,
+          text: ''
+        },
         popularGames: [],
       }
   },
@@ -59,21 +62,31 @@ export default {
     // добавление коментария
 
 
-    addComment() {
-      if (!this.userId.iduser || !this.newComment.rating || !this.newComment.text) {
-        alert('Заполните все поля!')
+    async addComment() {
+      if (!this.userId.idUser || this.newComment.rating == 0 || !this.newComment.text) {
+        alert('[ЗАПОЛНИТЕ ПОЛЯ]')
         return
       }
       const now = new Date()
-      this.comments.push({
-        iduser: this.userId.iduser, // Можно заменить на реальный ID пользователя
+      const coment = {
+        iduser: this.userId.idUser,
         comment: this.newComment.text,
         rate: this.newComment.rating,
         datepublish: now.toISOString(),
-      })
+        isread: false, 
+        IdProject: this.projectmas.IdProject
+      }
+      
 
-      // Сброс формы
+      console.log(coment)
+      const addcomment = await axios.post('http://localhost:5235/AddComment', coment)
+      if (!addcomment){
+        alert.log('[Ошибка, ошибка]\n  ••• Повторите попытку позже •••')
+      }
+      // // Сброс формы
       this.newComment.text = ''
+      this.newComment.rating = 0
+      this.fetchComments()
     },
 
     // Загрузка популярного контента
