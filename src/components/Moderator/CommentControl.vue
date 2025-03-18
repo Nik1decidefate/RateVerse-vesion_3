@@ -105,7 +105,7 @@ export default {
       <div v-for="(comments, projectName) in groupedComments" :key="projectName" class="project">
         <h2>{{ projectName }}</h2>
         <ul class="comment-list">
-          <li v-for="comment in comments" :key="comment.iduser" class="comment-item">
+          <li v-for="comment in comments" :key="comment.username" class="comment-item">
             <strong>{{ comment.comment }}</strong>
             <span>(Дата: {{ formatDate(comment.datepublish) }})</span>
 

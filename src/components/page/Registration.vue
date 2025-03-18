@@ -6,7 +6,7 @@
                 user:{
                     login: '',
                     password: '',
-                    avatar: 'src\image\imgUs\stub.png',
+                    avatar: 'src/image/imgUs/stub.png',
                     idrole: 1,
                     idstatus: 1
                 },

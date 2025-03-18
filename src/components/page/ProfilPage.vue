@@ -5,15 +5,27 @@ export default {
     },
     data(){
         return {
-            usermas: []
+            usermas: '',
+            component: {
+                cpu: '',
+                os: '',
+                ram:'',
+                gpu: '',
+            }
         }
     },
     methods:{
-        LoadUserData() {
+         LoadUserData() {
             const storedUser = sessionStorage.getItem('username')
             if(storedUser){
                 const parseUser = JSON.parse(storedUser)
                 this.usermas = parseUser
+                alert(this.usermas.system)
+                const parts = this.usermas.split(';');
+            this.components.cpu = parts[0] || '';
+            this.components.os = parts[1] || '';
+            this.components.ram = parts[2] || '';
+            this.components.gpu = parts[3] || '';
             } else {
                 
                 this.$router.push('/')
@@ -26,28 +38,30 @@ export default {
 <template>
    <div className="wind_us">
     <h1>Профиль</h1>
-    <div style="display:flex; border:1px solid black; border-radius: 20px; width: 1000px; height: 100vh;">
+    <div className="profil" style="display:flex; border:1px solid black; border-radius: 20px; width: 1000px; height: 100vh;">
         <!-- блок переходов -->
-        <div className="linksdiv">
-            <router-link to="/profil" class="link" :class="{ active: $route.path === '/profil' }">Профиль</router-link>
-        <router-link to="/settings" class="link" :class="{ active: $route.path === '/setting' }">Настройки</router-link>
-        <router-link to="/edit" class="link" :class="{ active: $route.path === '/edit' }">Редактирование</router-link>
-        </div>
+        <ul className="linksdiv">
+            <li><router-link to="/profil" className="link" :class="{ active: $route.path === '/profil' }">Профиль</router-link></li>
+            <li><router-link to="/settings" className="link" :class="{ active: $route.path === '/setting' }">Настройки</router-link></li>
+           <li><router-link to="/edit" className="link" :class="{ active: $route.path === '/edit' }">Редактирование</router-link></li>
+        </ul>
         <!-- блок данных пользователя -->
         <div>
             <div style="border-bottom: 1px solid black;">
 
-                <img :src="usermas.avatar ? usermas.avatar : './assets/Logo.png'" style="width: 200px; 
+                <img :src="usermas.avatar ? usermas.avatar : 'src/image/imgUs/stub.png'" style="width: 200px; 
                         height: 200px; 
-                        border-radius:100vh;" alt="@/assets/Logo.png">
-                <H2>{{ usermas.username || 'Фамилия имя' }}</H2>
-            </div>
-            <h3>Информация об устройстве</h3>
-            <h5>Процессор:</h5>
-            <h5>Операционная сисетма (ОС):</h5>
-            <h5>Оперативная память (ОЗУ):</h5>
-            <h5>Видеокарта:</h5>
+                        border-radius:100vh;">
+                <H2>{{ usermas.username || 'Имя пользователя' }}</H2>
+            </div>ТРАРЬ
+            <h5>Процессор: {{ component.cpu }}</h5>
+            <h5>Операционная система (ОС): {{ component.os }}</h5>
+            <h5>Оперативная память (ОЗУ): {{ component.ram }}</h5>
+            <h5>Видеокарта: {{ component.gpu }}</h5>
 
+            <div>
+                <button>[Удаление аккаунта]</button>
+            </div>
         </div>
     </div>
    </div> 
@@ -60,49 +74,68 @@ export default {
         font-weight: 400;
         font-style: normal;
         display:flex;
+        margin-top: 5%;
         justify-content: center;
         align-items: center;
-        box-shadow: 1px 0px 20px black;
         flex-direction: column;
     }
     .linksdiv{
-        display:flex;
-        padding: 1px;
-        flex-direction: column; 
-        border-right: 2px solid black; 
-        width: auto;
-        margin-left: 0px;
-        /* position: relative; */
+        list-style: none;
+        widows: 250px;
+        left: 0;
     }
-    .link {
-        display: flex;
-        height: 40px;
-        justify-content: center;
-        /* position: absolute; */
-        right: 0;
+    .linksdiv li {
+        margin: 8px 0;
+        position: relative;
+        background: #fff;
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 2px;
+        overflow: hidden;
+    }
+
+    .linksdiv li::before {
+        content: '';
+        position: absolute;
+        left: 0;
         top: 0;
-        margin: 1px;
-        min-width: 10px;
-        color: transparent;
+        bottom: 0;
+        width: 5px;
+        background: #2b2b2b;
+        transition: 0.5s all ease-in-out;
+    }
+
+    .linksdiv li:nth-child(1) {
+        background: #2b2b2b;
+        color: #fff;
+    }
+    /* .linksdiv li:nth-child(2)::before {
+        background: #e44134;
+    }
+    .linksdiv li:nth-child(3)::before {
+        background: #32a250;
+    } */
+
+    .linksdiv li:hover::before {
+        border-radius: 0 20px 20px 0;
+        width: 110%;
+    }
+
+    .link {
+        display: block;
+        position: 10px 20px;
+        color: #2b2b2b;
         text-decoration: none;
+        font-size: 18px;
         font-weight: 600;
-        align-items: center;
-        text-align: center;
-        border-radius: 0px 10px 10px 0px;
-        background: lightgray;
-        transition: width 0.3s ease;
-        overflow: hidden; /* Скрываем текст, когда ссылка не активна */
-        width: 10px; /* Начальная ширина */
+        position: relative;
+        z-index: 1;
     }
-    .link:nth-child(1){
-        border-radius: 15px 10px 10px 0;
+    .link:hover {
+        color: #fff;
+        transition: 0.4s all ease-out;
     }
-    .link.active, .link:hover {
-        width: 200px;
-        color: black;
-    }
-    .link + .link {
-        top: calc(var(--prev-height, 0px) + 1px);
-        --prev-height: 41px;
+    .link::after {
+        color: #fff;
     }
 </style>

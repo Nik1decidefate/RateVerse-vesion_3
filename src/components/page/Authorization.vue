@@ -22,7 +22,7 @@ export default {
 
       const response = await axios.get('http://localhost:5235/Authorization', {
         params: {
-          login: this.loginUs,
+          login: this.loginUs,  
           password: this.passUs
         }
       })

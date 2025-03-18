@@ -69,7 +69,7 @@ export default {
       }
       const now = new Date()
       const coment = {
-        iduser: this.userId.idUser,
+        username: this.userId.username,
         comment: this.newComment.text,
         rate: this.newComment.rating,
         datepublish: now.toISOString(),

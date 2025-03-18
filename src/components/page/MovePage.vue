@@ -25,7 +25,11 @@
            methods: {
                async ShowMove() {
                    try {
-                       const response = await axios.get('http://localhost:5235/ShowAllMove')
+                        const response = await axios.get('http://localhost:5235/ShowAllProject', {
+                            params: {
+                                id: 2
+                            }
+                        })
                        if (response.data) {
                            console.log("Успешно!", Date.now())
                            this.moveinput = response.data;

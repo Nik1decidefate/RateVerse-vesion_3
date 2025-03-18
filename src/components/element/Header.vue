@@ -64,7 +64,7 @@ export default {
           </div>
           <div v-else-if ="usermas == null" className="P_div">
             <router-link className="links" to="/authorization">Войти</router-link>
-            <router-link className="links" to="/registration">Зарегестрироваться</router-link>
+            <router-link className="links" to="/registration">Зарегистрироваться</router-link>
           </div>
           <img src="@/assets/notifications.png" style="width: 30px; height: 30px;" alt="">
         </div>

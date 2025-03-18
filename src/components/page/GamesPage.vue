@@ -25,7 +25,11 @@
         methods: {
             async ShowGame() {
                 try {
-                    const response = await axios.get('http://localhost:5235/ShowAllGame')
+                    const response = await axios.get('http://localhost:5235/ShowAllProject', {
+                        params: {
+                            id: 1
+                        }
+                    })
                     if (response.data) {
                         console.log("Успешно!", Date.now())
                     // Преобразование JSON строки в объекты
