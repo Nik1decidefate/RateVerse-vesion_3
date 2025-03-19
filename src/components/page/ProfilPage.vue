@@ -10,22 +10,22 @@ export default {
                 cpu: '',
                 os: '',
                 ram:'',
-                gpu: '',
+                gpu: ''
             }
         }
     },
     methods:{
-         LoadUserData() {
-            const storedUser = sessionStorage.getItem('username')
+        async LoadUserData() {
+            const storedUser = await sessionStorage.getItem('username')
             if(storedUser){
                 const parseUser = JSON.parse(storedUser)
                 this.usermas = parseUser
-                alert(this.usermas.system)
-                const parts = this.usermas.split(';');
-            this.components.cpu = parts[0] || '';
-            this.components.os = parts[1] || '';
-            this.components.ram = parts[2] || '';
-            this.components.gpu = parts[3] || '';
+                const parts = this.usermas.system.split(';')
+                const keys = ['cpu', 'os', 'ram', 'gpu']
+
+                keys.forEach((key, index) => {
+                    this.component[key] = parts[index] || ''
+                });
             } else {
                 
                 this.$router.push('/')
@@ -41,6 +41,7 @@ export default {
     <div className="profil" style="display:flex; border:1px solid black; border-radius: 20px; width: 1000px; height: 100vh;">
         <!-- блок переходов -->
         <ul className="linksdiv">
+            
             <li><router-link to="/profil" className="link" :class="{ active: $route.path === '/profil' }">Профиль</router-link></li>
             <li><router-link to="/settings" className="link" :class="{ active: $route.path === '/setting' }">Настройки</router-link></li>
            <li><router-link to="/edit" className="link" :class="{ active: $route.path === '/edit' }">Редактирование</router-link></li>
@@ -53,7 +54,7 @@ export default {
                         height: 200px; 
                         border-radius:100vh;">
                 <H2>{{ usermas.username || 'Имя пользователя' }}</H2>
-            </div>ТРАРЬ
+            </div>
             <h5>Процессор: {{ component.cpu }}</h5>
             <h5>Операционная система (ОС): {{ component.os }}</h5>
             <h5>Оперативная память (ОЗУ): {{ component.ram }}</h5>

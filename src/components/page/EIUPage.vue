@@ -2,102 +2,138 @@
 import axios from 'axios'
 
 export default {
-    mounted(){
-        this.LoadUserData()
-    },
-    data(){
-        return {
-            usermas: '',
-            // userUpdate:{
-            //     idUser: 0,
-            //     idRole: 0,
-            //     email:'',
-            //     username: '',
-            //     password:'',
-            //     avatar:'',
-            //     idStatus: 1,
-            //     system: ''
-            // }
-        }
-    },
-    methods:{
-        LoadUserData() {
-            const storedUser = sessionStorage.getItem('username')
-            // if(storedUser){
-            //     const parseUser = JSON.parse(storedUser)
-            //     this.usermas = parseUser
-            // } else {
-                
-            //     this.$router.push('/')
-            // }
-        },
-        LoadAvatar(event){
-            this.usermas.avater = event.target.files[0]
-        },
-        async updateProfile(){
-            // const formsData = new FormData()
-            // formsData.append('idUser', this.usermas.idUser)
-            // formsData.append('username', this.usermas.username)
-            // formsData.append('email', this.usermas.email)
-            // formsData.append('password', this.usermas.password)
-            // formsData.append('system', this.usermas.system)
-            // formsData.append('avatar', this.usermas.avatar)
-            // formsData.append('idRole', this.usermas.idRole)
-            // formsData.append('idStatus', this.usermas.idStatus)
-            // try {
-            //     const res = await axios.put('http://localhost:5235/EditInfoUser',null, {params: {user: formsData}})
-            // }
-            try {
+  mounted() {
+    this.LoadUserData()
+  },
+  data() {
+    return {
+      usermas: '',
+      component: {
+        cpu: '',
+        gpu: '',
+        os: '',
+        ram: ''
+      },
+      selectedFile: null, // Для хранения выбранного файла
+      previewUrl: '' // Для отображения превью изображения
+    }
+  },
+  methods: {
+    LoadUserData() {
+      const storedUser = sessionStorage.getItem('username')
+      if (storedUser) {
+        const parseUser = JSON.parse(storedUser)
+        this.usermas = parseUser
+        const parts = this.usermas.system.split(';')
+        const keys = ['cpu', 'gpu', 'os', 'ram']
 
-            }
-            catch (error){
-                console.error('Ошибка при обновлении профиля:', error);
-                alert('Произошла ошибка при обновлении профиля.');
-            }
+        keys.forEach((key, index) => {
+          this.component[key] = parts[index] || ''
+        })
+      } else {
+        this.$router.push('/')
+      }
+    },
+    LoadAvatar(event) {
+        this.selectedFile = event.target.files[0]
+        alert(event.target.files[1])
+        if (this.selectedFile) {
+            this.previewUrl = URL.createObjectURL(this.selectedFile) // Создание URL для предварительного просмотра
+            this.usermas.avatar = this.selectedFile.name
+            alert(this.usermas.avatar)
         }
     },
-    
-}
+    async uploadImage() {
+      try {
+        const formData = new FormData()
+        formData.append('file', this.selectedFile)
+
+        const uploadResponse = await axios.post('http://localhost:5235/UploadImage', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        })
+
+        if (uploadResponse.data && uploadResponse.data.FileName) {
+          alert('Файл успешно загружен!')
+        }
+      } catch (error) {
+        console.error('Ошибка при загрузке файла:', error)
+        alert('Произошла ошибка при загрузке файла.')
+      }
+    },
+    async updateProfile() {
+      try {
+        const componentArray = Object.values(this.component)
+        this.usermas.system = componentArray.join(';')
+        const res = await axios.put('http://localhost:5235/EditInfoUser', this.usermas)
+
+          if (res.data) {
+            console.log(res.data)
+            alert('Профиль успешно обновлён!')
+            // this.$router.push('/profil')
+          }
+        
+      } catch (error) {
+        console.error('Ошибка при обновлении профиля:',this.usermas, error)
+        alert('Произошла ошибка при обновлении профиля.')
+      }
+    }
+  }
+};
 </script>
+
 <template>
-   <div className="wind_us">
+  <div class="wind_us">
     <h1>Редактирование профиля</h1>
-    <div className="profil" style="display:flex; border:1px solid black; border-radius: 20px; width: 1000px; height: 100vh;">
-        <!-- блок переходов -->
-        <ul className="linksdiv">
-            <li><router-link to="/profil" className="link" :class="{ active: $route.path === '/profil' }">Профиль</router-link></li>
-            <li><router-link to="/settings" className="link" :class="{ active: $route.path === '/setting' }">Настройки</router-link></li>
-           <li><router-link to="/edit" className="link" :class="{ active: $route.path === '/edit' }">Редактирование</router-link></li>
-        </ul>
-        <!-- блок данных пользователя -->
-        <div className="profil-edit">
-            <form @submit="updateProfile">
-                <div>
-                    <label for="file"></label>
-                    <input type="file" @change="LoadAvatar" required>
-                </div>
-                <div>
-                    <label for="username"></label>
-                    <input type="text" v-model="usermas.username" required>
-                </div>
-                <div>
-                    <label for="password"></label>
-                    <input type="password" v-model="usermas.password" required>
-                </div>
-                <div>
-                    <label for="email"></label>
-                    <input type="email" v-model="usermas.email" required>
-                </div>
-                <div>
-                    <label for="osInfo"></label>
-                    <input type="text" v-model="usermas.system" required>
-                </div>
-                <button type="submit">[Сохрание изменений]</button>
-            </form>
-        </div>
+    <div class="profil" style="display:flex; border:1px solid black; border-radius: 20px; width: 1000px; height: 100vh;">
+      <ul class="linksdiv">
+        <li><router-link to="/profil" class="link" :class="{ active: $route.path === '/profil' }">Профиль</router-link></li>
+        <li><router-link to="/settings" class="link" :class="{ active: $route.path === '/setting' }">Настройки</router-link></li>
+        <li><router-link to="/edit" class="link" :class="{ active: $route.path === '/edit' }">Редактирование</router-link></li>
+      </ul>
+      <div class="profil-edit">
+        <!-- <form @submit.prevent="updateProfile"> -->
+          <div>
+            <input type="file" @change="LoadAvatar" />
+            <button @click="uploadImage">Загрузить изображение</button>
+            <div v-if="previewUrl">
+                <img :src="previewUrl" alt="Preview" style="max-width: 200px;" />
+            </div>
+          </div>
+          <div>
+            <label for="username">Логин </label>
+            <input type="text" v-model="usermas.username" required>
+          </div>
+          <div>
+            <label for="password">Пароль </label>
+            <input type="password" v-model="usermas.password" required>
+          </div>
+          <div>
+            <label for="email">Email </label>
+            <input type="email" v-model="usermas.email" required>
+          </div>
+          <div>
+            <label for="cpu">Видеокарта</label>
+            <input type="text" v-model="component.cpu" required>
+          </div>
+          <div>
+            <label for="ram">Операционная память (ОЗУ)</label>
+            <input type="text" v-model="component.ram" required>
+          </div>
+          <div>
+            <label for="os">Операционная система (ОС)</label>
+            <input type="text" v-model="component.os" required>
+          </div>
+          <div>
+            <label for="gpu">Процессор</label>
+            <input type="text" v-model="component.gpu" required>
+          </div>
+          <button type="submit" @click="updateProfile">[Сохранение изменений]</button>
+        <!-- </form> -->
+      </div>
     </div>
-   </div> 
+  </div>
 </template>
+    
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Nabla&display=swap');
 
@@ -137,7 +173,7 @@ export default {
         transition: 0.5s all ease-in-out;
     }
 
-    .linksdiv li:nth-child(2) {
+    .linksdiv li:nth-child(3) {
         background: #2b2b2b;
         color: #fff;
     }
