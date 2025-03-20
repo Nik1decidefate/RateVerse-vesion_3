@@ -3,8 +3,8 @@ export default {
   methods:{
     close(){
       sessionStorage.clear()
-      this.$router.push('/')
       this.usermas = null
+      this.$router.push('/')
     },
     LoadUserData(){
       const storedUser = sessionStorage.getItem('username')
@@ -30,7 +30,14 @@ export default {
   },
   mounted(){
     this.LoadUserData()
-  }
+  },
+  
+  props: {
+    user: {
+      type: Object,
+      default: null
+    }
+  }, 
 }
 </script>
 
@@ -194,7 +201,9 @@ header {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   z-index: 1000;
 }
-
+ul {
+  list-style: none;
+}
 /* Логотип */
 .logo {
   display: flex;
@@ -267,14 +276,18 @@ nav {
   border: 1px solid white;
   padding: 5px 10px;
   cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0px 0px 6px 1px #fff;
   font-family: "Audiowide", sans-serif;
   font-size: 14px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 1s ease, color 0.3s ease;
 }
 
 .btn:hover {
-  background-color: gray;
-  color: white;
+  transition: 0.3s ease-in-out;
+  box-shadow: inset 0px 0px 6px 1px #2b2b2b;
+  background-color: #fff;
+  color: #2b2b2b;
 }
 
 /* Блок уведомлений */

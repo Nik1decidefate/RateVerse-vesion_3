@@ -39,26 +39,9 @@ export default {
         alert(event.target.files[1])
         if (this.selectedFile) {
             this.previewUrl = URL.createObjectURL(this.selectedFile) // Создание URL для предварительного просмотра
-            this.usermas.avatar = this.selectedFile.name
+            this.usermas.avatar = `src/image/imgUs/${this.selectedFile.name}`
             alert(this.usermas.avatar)
         }
-    },
-    async uploadImage() {
-      try {
-        const formData = new FormData()
-        formData.append('file', this.selectedFile)
-
-        const uploadResponse = await axios.post('http://localhost:5235/UploadImage', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        })
-
-        if (uploadResponse.data && uploadResponse.data.FileName) {
-          alert('Файл успешно загружен!')
-        }
-      } catch (error) {
-        console.error('Ошибка при загрузке файла:', error)
-        alert('Произошла ошибка при загрузке файла.')
-      }
     },
     async updateProfile() {
       try {
@@ -67,9 +50,20 @@ export default {
         const res = await axios.put('http://localhost:5235/EditInfoUser', this.usermas)
 
           if (res.data) {
+            const formData = new FormData()
+            formData.append('file', this.selectedFile)
+
+            const uploadResponse = await axios.post('http://localhost:5235/UploadImage', formData, {
+              headers: { 'Content-Type': 'multipart/form-data' }
+            })
+
+            if (uploadResponse.data && uploadResponse.data.FileName) {
+              alert('Файл успешно загружен!')
+            }
             console.log(res.data)
             alert('Профиль успешно обновлён!')
-            // this.$router.push('/profil')
+            sessionStorage.setItem('username', JSON.stringify(this.usermas));
+            this.$router.push('/profil')
           }
         
       } catch (error) {
@@ -94,7 +88,7 @@ export default {
         <!-- <form @submit.prevent="updateProfile"> -->
           <div>
             <input type="file" @change="LoadAvatar" />
-            <button @click="uploadImage">Загрузить изображение</button>
+            <!-- <button @click="uploadImage">Загрузить изображение</button> -->
             <div v-if="previewUrl">
                 <img :src="previewUrl" alt="Preview" style="max-width: 200px;" />
             </div>

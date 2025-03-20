@@ -1,28 +1,27 @@
 <script>
 // import axios from 'axios'
-import Game from './components/page/GamesPage.vue'
+// import Game from './components/page/GamesPage.vue'
 import Headers from './components/element/Header.vue'
 export default {
-  components: {Headers, Game},
+  components: {Headers},
   data() {
     return {
-      projects: [], //Сюда будут загружены данные
-      user: null
+      renderKey:0
     }
   },
   methods: {
-    allProject(){
-      const prokect = {};
-    },
-    setUser(userData){
-      this.user=userData
+    reRender(){
+      this.renderKey++
     }
+  },
+  mounted() {
+    this.reRender()
   }
-};
+}
 </script>
 
 <template>
-<Headers />
+    <Headers :key="renderKey" />
 </template>
 
 <style scoped>
