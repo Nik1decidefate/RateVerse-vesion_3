@@ -17,28 +17,32 @@ export default {
     },
     methods: {
       async signIn() {
-      //   try {
-      console.log('Отправляемые данные:', this.loginUs, this.passUs);
+        try {
+          console.log('Отправляемые данные:', this.loginUs, this.passUs)
 
-      const response = await axios.get('http://localhost:5235/Authorization', {
-        params: {
-          login: this.loginUs,  
-          password: this.passUs
+          const response = await axios.get('http://localhost:5235/Authorization', {
+            params: {
+              login: this.loginUs,
+              password: this.passUs,
+            },
+          });
+
+          if (response.data) {
+            console.log('Успешная авторизация:', response.data)
+            sessionStorage.setItem('username', JSON.stringify(response.data))
+            
+            // Отправляем событие для пересоздания Header
+            this.$emit('refresh-header')
+            
+            this.$router.push('/profil')
+          } else {
+            this.LoginError = true
+          }
+        } catch (error) {
+          console.error('Ошибка авторизации:', error)
+          this.LoginError = true
         }
-      })
-      if (response.data) {
-        console.log('Успешная авторизация:', response.data)
-        sessionStorage.setItem('username', JSON.stringify(response.data))
-        this.$router.push('/profil')
-      } else {
-        this.LoginError = true
-      }
-      //   } catch (error) {
-      //     console.error('Ошибка авторизации:', error)
-      //     console.error('Детали ошибки:', error.response ? error.response.data : null)
-      //     this.LoginError = true
-      //   }
-    }
+      },
   }
 }
 </script>

@@ -1,28 +1,29 @@
+<template>
+  <div id="app">
+    <Headers :key="headerKey" @refresh-header="refreshHeader" />
+    <router-view @refresh-header="refreshHeader" />
+  </div>
+</template>
+
 <script>
-// import axios from 'axios'
-// import Game from './components/page/GamesPage.vue'
 import Headers from './components/element/Header.vue'
+
 export default {
-  components: {Headers},
+  components: {
+    Headers,
+  },
   data() {
     return {
-      renderKey:0
+      headerKey: 0, // Уникальный ключ для компонента Header
     }
   },
   methods: {
-    reRender(){
-      this.renderKey++
-    }
+    refreshHeader() {
+      this.headerKey ++ // Изменяем ключ, чтобы пересоздать Header
+    },
   },
-  mounted() {
-    this.reRender()
-  }
 }
 </script>
-
-<template>
-    <Headers :key="renderKey" />
-</template>
 
 <style scoped>
 /* .h{

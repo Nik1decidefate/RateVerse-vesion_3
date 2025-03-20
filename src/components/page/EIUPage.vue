@@ -24,12 +24,15 @@ export default {
       if (storedUser) {
         const parseUser = JSON.parse(storedUser)
         this.usermas = parseUser
-        const parts = this.usermas.system.split(';')
-        const keys = ['cpu', 'gpu', 'os', 'ram']
+        if(this.usermas.system){
 
-        keys.forEach((key, index) => {
-          this.component[key] = parts[index] || ''
-        })
+          const parts = this.usermas.system.split(';')
+          const keys = ['cpu', 'gpu', 'os', 'ram']
+          
+          keys.forEach((key, index) => {
+            this.component[key] = parts[index] || ''
+          })  
+        }
       } else {
         this.$router.push('/')
       }
@@ -63,6 +66,7 @@ export default {
             console.log(res.data)
             alert('Профиль успешно обновлён!')
             sessionStorage.setItem('username', JSON.stringify(this.usermas));
+            this.$emit('refresh-header')
             this.$router.push('/profil')
           }
         

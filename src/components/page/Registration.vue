@@ -30,7 +30,7 @@
                     }   
                     const response = await axios.post("http://localhost:5235/Registration", userData)
                     if(response.status === 200){
-                        alert("Добро пожаловать в [Систему] {" , this.user.login, "}!")
+                        alert(`Добро пожаловать в [Систему] \n ${this.userData.login}!`)
                         // sessionStorage.setItem('username')
                         this.signIn();
                     }
