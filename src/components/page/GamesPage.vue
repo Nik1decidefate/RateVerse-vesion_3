@@ -1,5 +1,5 @@
 <template>
- <div style="margin-top:120px;">
+ <div className="maindiv">
     <h1>Игры</h1>
     <div className="divAll" v-show="gameinput">
       <div v-for="(game, index) in gameinput" :key="index" className="divgame" @click="projectview(game)">
@@ -12,6 +12,11 @@
         </div>
       </div>
     </div>
+    <aside className="filterDiv">
+        <label for="text">Поиск</label>
+        <input type="text" required>
+
+    </aside>
   </div>
 </template>
 <script>
@@ -77,5 +82,14 @@
 .img{
     max-width: 300px;
     max-height: 200px;
+}
+.filterDiv {
+    border: 1xp solid black;
+    right: 0;
+}
+
+.maindiv {
+    display: flex;
+    flex-direction: column;
 }
 </style>

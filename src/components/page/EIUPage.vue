@@ -49,7 +49,8 @@ export default {
     async updateProfile() {
       try {
         const componentArray = Object.values(this.component)
-        this.usermas.system = componentArray.join(';')
+        if(componentArray)
+          this.usermas.system = componentArray.join(';')
         const res = await axios.put('http://localhost:5235/EditInfoUser', this.usermas)
 
           if (res.data) {

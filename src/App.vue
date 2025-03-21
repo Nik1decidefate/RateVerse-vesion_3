@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Headers :key="headerKey" @refresh-header="refreshHeader" />
-    <router-view @refresh-header="refreshHeader" />
+    <router-view className="r" @refresh-header="refreshHeader" />
   </div>
 </template>
 
@@ -34,5 +34,8 @@ export default {
 } */
 template{
   padding: 0%;
+}
+.r{
+  margin-top: 6%;
 }
 </style>
